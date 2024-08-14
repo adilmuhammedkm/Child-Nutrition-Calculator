@@ -1,162 +1,93 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
+#Input
+child_data = {
+    "name": input("Name of the child : "),
+    "age": int(input("Age of the child : ")),
+    "gender": input("Gender of the child : "),
+    "height_inches": int(input("Height of the child (in inches) : ")), #in inches
+    "weight_pounds": int(input("Weight of the child (in pounds) : ")) #in pounds
+}
 
-# C extensions
-*.so
+food_consumed = {
+    "Milk": int(input("Milk consumed by the child (in grams) : ")), 
+    "Egg": int(input("Egg consumed by the child (in grams) : ")), 
+    "Rice": int(input("Rice consumed by the child (in grams) : ")), 
+    "Vegetable": int(input("Vegetable consumed by the child (in grams) : ")), 
+    "Meat": int(input("Meat consumed by the child (in grams) : ")), 
+    "Lentils": int(input("Lentils consumed by the child (in grams) : "))
+}
 
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
+#Class
+class Child:
+    def __init__(self, name, age, gender, height_inches, weight_pounds):
+        self.name = name
+        self.age = age
+        self.gender = gender
+        self.height = height_inches
+        self.weight = weight_pounds
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
-*.manifest
-*.spec
+    def calculate_bmi(self):
+        bmi = (self.weight/(self.height**2))*703
+        return bmi
 
-# Installer logs
-pip-log.txt
-pip-delete-this-directory.txt
+    def get_bmi_categories(self, bmi):
+        if bmi < 16:
+            return "Severely underweight"
+        elif 16 <= bmi < 18.5:
+            return "Underweight"
+        elif 18.5 <= bmi < 25:
+            return "Healthy"
+        elif 25 <= bmi < 30:
+            return "Overweight"
+        elif 30 <= bmi:
+            return "Obese"
+        else:
+            return "None"
+        
+    def get_daily_calorie_requirement(self):
+        if 0 <= self.age <= 2:
+            return 800
+        elif 2 < self.age <= 4:
+            return 1400
+        elif 4 < self.age <= 8:
+            return 1800
+        else:
+            return None
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
-cover/
+    def calculate_daily_calories_consumed(self, food_items):
+        calorie_dict = {
+            "Milk": 100,
+            "Egg": 155,
+            "Rice": 130,
+            "Lentils": 113,
+            "Vegetable": 85,
+            "Meat": 143
+        }
+        
+        total_calories = 0
+        for food, quantity in food_items.items():
+            if food in calorie_dict:
+                total_calories += (calorie_dict[food] * quantity / 100)
+        return total_calories
 
-# Translations
-*.mo
-*.pot
+    def check_nutrition_status(self, daily_calories_consumed):
+        recommended_calories = self.get_daily_calorie_requirement()
+        if recommended_calories is not None:
+            if daily_calories_consumed < recommended_calories:
+                return f"Child is undernourished and recommended calories is {recommended_calories} "
+            else:
+                return "Well-nourished"
+        else:
+            return "Calorie requirement of your age is not defined"
+        
+#Assigning class into variables
+child = Child(**child_data)
+bmi = child.calculate_bmi()
+bmi_categories = child.get_bmi_categories(bmi)
+daily_calories_consumed = child.calculate_daily_calories_consumed(food_consumed)
+nutrition_status = child.check_nutrition_status(daily_calories_consumed)
 
-# Django stuff:
-*.log
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
-
-# Flask stuff:
-instance/
-.webassets-cache
-
-# Scrapy stuff:
-.scrapy
-
-# Sphinx documentation
-docs/_build/
-
-# PyBuilder
-.pybuilder/
-target/
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# IPython
-profile_default/
-ipython_config.py
-
-# pyenv
-#   For a library or package, you might want to ignore these files since the code is
-#   intended to run in multiple environments; otherwise, check them in:
-# .python-version
-
-# pipenv
-#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
-#   However, in case of collaboration, if having platform-specific dependencies or dependencies
-#   having no cross-platform support, pipenv may install dependencies that don't work, or not
-#   install all needed dependencies.
-#Pipfile.lock
-
-# poetry
-#   Similar to Pipfile.lock, it is generally recommended to include poetry.lock in version control.
-#   This is especially recommended for binary packages to ensure reproducibility, and is more
-#   commonly ignored for libraries.
-#   https://python-poetry.org/docs/basic-usage/#commit-your-poetrylock-file-to-version-control
-#poetry.lock
-
-# pdm
-#   Similar to Pipfile.lock, it is generally recommended to include pdm.lock in version control.
-#pdm.lock
-#   pdm stores project-wide configurations in .pdm.toml, but it is recommended to not include it
-#   in version control.
-#   https://pdm.fming.dev/latest/usage/project/#working-with-version-control
-.pdm.toml
-.pdm-python
-.pdm-build/
-
-# PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
-__pypackages__/
-
-# Celery stuff
-celerybeat-schedule
-celerybeat.pid
-
-# SageMath parsed files
-*.sage.py
-
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
-
-# Spyder project settings
-.spyderproject
-.spyproject
-
-# Rope project settings
-.ropeproject
-
-# mkdocs documentation
-/site
-
-# mypy
-.mypy_cache/
-.dmypy.json
-dmypy.json
-
-# Pyre type checker
-.pyre/
-
-# pytype static type analyzer
-.pytype/
-
-# Cython debug symbols
-cython_debug/
-
-# PyCharm
-#  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
-#  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
-#  and can be added to the global gitignore or merged into this file.  For a more nuclear
-#  option (not recommended) you can uncomment the following to ignore the entire idea folder.
-#.idea/
+#Output
+print(f"Child's BMI: {bmi:.2f}")
+print(f"BMI Category: {bmi_categories}")
+print(f"Child's Daily Calorie Consumption: {daily_calories_consumed:.2f} cal")
+print(f"Nutrition Status: {nutrition_status}")
